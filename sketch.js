@@ -138,8 +138,13 @@ function checksRacketCollision(x,y){
 
 
 function moveOpponentRacket(){
-  ySpeedOpponent= yBall - yOpponentRacket - racketLength / 2 -30;
-  yOpponentRacket += ySpeedOpponent;
+  if (keyIsDown(87)){       // write the same js documentation
+    yOpponentRacket -= 10;
+  };
+
+  if (keyIsDown(83)){       // write the same js documentation
+    yOpponentRacket += 10;
+  };
   racketSound.play();
 
  
