@@ -48,9 +48,9 @@ let dotSound;
 
 
 function preload(){
-  soundTrack = loadSound("/Pong-Sons/Track.mp3");
-  racketSound = loadSound("/Pong-Sons/Racket.mp3");
-  dotSound = loadSound("/Pong-Sons/Point.mp3");
+  soundTrack = loadSound("/PongSons/Track.mp3");
+  racketSound = loadSound("/PongSons/Racket.mp3");
+  dotSound = loadSound("/PongSons/Point.mp3");
 
 
 };
@@ -68,12 +68,12 @@ function draw (){
   checkEdgeCollision();
   showRacket(xRacket, yRacket);
   moveRacket1();
-  checkRacketCollision();
+/*   checkRacketCollision(); */
   checksRacketCollision(xRacket,yRacket);
   showRacket(xOpponentRacket, yOpponentRacket);
   moveOpponentRacket();
   checksRacketCollision(xOpponentRacket, yOpponentRacket);
-  showOpponentRacket();
+/*   showOpponentRacket(); */
   scoreboard();
   deeppointCount();
 
@@ -101,9 +101,9 @@ function checkEdgeCollision(){
   }
 }
 
-function showOpponentRacket(){
+/* function showOpponentRacket(){
   rect (xOpponentRacket,yOpponentRacket,racketLength,racketHeight)
-};
+}; */
 
 function showRacket(x,y){
   rect (x, y ,racketLength,racketHeight)
@@ -123,13 +123,14 @@ function moveRacket1(){
 function checkRacketCollision(){
   if(xBall - ray < xRacket + racketLength && yBall - ray < yRacket + racketHeight && yBall + ray > yRacket){
     xSpeedxBall *= -1;
-    t
+    racketSound.play()
+
   }
 };
 
-function checksRacketCollision(x,y){
+function checksRacketCollision(){
   collision = 
-  collideRectCircle(x, y, racketLength, racketHeight, xBall, yBall, ray);
+  collideRectCircle(xRacket, yRacket, racketLength, racketHeight, xBall, yBall, ray);
   if (collision){
     xSpeedxBall *= -1;
     racketSound.play();
