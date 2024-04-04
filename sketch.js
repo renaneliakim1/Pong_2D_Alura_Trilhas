@@ -62,7 +62,7 @@ function draw() {
   background(50, 80);
   strokeWeight(2);
   stroke(255, 165, 0);
-  line(300, 0, 300, 400);
+  line(300, 30, 300, 400);
 
   stroke(173, 216, 230);
 
