@@ -46,8 +46,6 @@ let dotSound;
 
 let timeLeft = 60;
 
-
-
 function preload() {
   soundTrack = loadSound("/PongSons/Track.mp3");
   racketSound = loadSound("/PongSons/Racket.mp3");
@@ -61,7 +59,7 @@ function setup() {
 }
 
 function draw() {
-  background(50,80);
+  background(50, 80);
   strokeWeight(2);
   stroke(255, 165, 0);
   line(300, 0, 300, 400);
@@ -74,18 +72,24 @@ function draw() {
   text("Time left  : " + timeLeft, width / 2, 20);
   stroke(255, 165, 0);
 
-
   showBall();
   moveBall();
   checkEdgeCollision();
   showRacket(xRacket, yRacket);
   moveRacket1();
-  checksRacketCollision(xRacket, yRacket);
   showRacket(xOpponentRacket, yOpponentRacket);
   moveOpponentRacket();
-  checksRacketCollision(xOpponentRacket, yOpponentRacket);
+ 
+  checksRacketCollision(xRacket, yRacket, racketLength, racketHeight);
+  checksRacketCollision(xOpponentRacket,yOpponentRacket,racketLength,racketHeight);
+
   scoreboard();
   deeppointCount();
+
+
+
+
+
 }
 
 function startTimer() {
@@ -98,7 +102,6 @@ function startTimer() {
     }
   }, 1000); // 1000 milliseconds = 1 second
 }
-
 
 function showBall() {
   circle(xBall, yBall, diameter);
@@ -118,9 +121,9 @@ function checkEdgeCollision() {
   }
 }
 
-
 function showRacket(x, y) {
   rect(x, y, racketLength, racketHeight);
+
 }
 
 function moveRacket1() {
@@ -135,7 +138,7 @@ function moveRacket1() {
   }
 }
 
-function checksRacketCollision() {
+  function checksRacketCollision() {
   if (
     xBall - ray < xRacket + racketLength &&
     yBall - ray < yRacket + racketHeight &&
@@ -146,13 +149,15 @@ function checksRacketCollision() {
   }
 }
 
-function checksRacketCollision() {
-  collision = collideRectCircle(xRacket, yRacket, racketLength, racketHeight,xBall,yBall,ray);
+function checksRacketCollision(x,y) {
+  collision = collideRectCircle(x, y, racketLength, racketHeight,xBall,yBall,ray);
   if (collision) {
     xSpeedxBall *= -1;
     racketSound.play();
   }
-}
+}  
+
+
 
 function moveOpponentRacket() {
   if (keyIsDown(87)) {
@@ -164,12 +169,27 @@ function moveOpponentRacket() {
     // write the same js documentation
     yOpponentRacket += 10;
   }
-  racketSound.play();
 }
+
+
+function verificaColisaoBorda(){
+  if (xBall + ray> width 
+     (xBall - ray< 0)){
+    xSpeedxBall *= -1;
+  }
+  if (yBall + ray> height 
+     (yBall - ray < 0)){
+      ySpeedxBall *= -1;
+  }
+}
+
+
+
+
 
 function scoreboard() {
   stroke(255);
-  textAlign(CENTER,CENTER);
+  textAlign(CENTER, CENTER);
   textSize(16);
   fill(color(255, 140, 0));
   rect(200, 10, 40, 20);
@@ -192,8 +212,6 @@ function deeppointCount() {
   }
 }
 
-
-
 function gameOver() {
   swal({
     title: "Game over!",
@@ -201,5 +219,4 @@ function gameOver() {
     icon: "success",
     button: "Reload to play again! :)",
   });
-  
-  }
+}
