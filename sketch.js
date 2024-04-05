@@ -18,6 +18,7 @@
 //pontuação oponente= opponentScore
 //placar = scoreboard
 
+
 let xBall = 300;
 let yBall = 200;
 let diameter = 12;
@@ -31,11 +32,8 @@ let yRacket = 150;
 let xOpponentRacket = 585;
 let yOpponentRacket = 150;
 
-let ySpeedOpponent;
-
 let racketLength = 10;
 let racketHeight = 100;
-let collision = false;
 
 let score = 0;
 let opponentScore = 0;
@@ -43,64 +41,68 @@ let opponentScore = 0;
 let racketSound;
 let soundTrack;
 let dotSound;
+let cheer;
 
-let timeLeft = 60;
+let timeLeft = 60; 
+
+let start = false;
+let timerStarted = false;
 
 function preload() {
   soundTrack = loadSound("/PongSons/Track.mp3");
   racketSound = loadSound("/PongSons/Racket.mp3");
   dotSound = loadSound("/PongSons/Point.mp3");
+  cheer = loadSound("/PongSons/Cheer.mp3");
 }
 
 function setup() {
   createCanvas(600, 400);
   soundTrack.loop();
-  startTimer();
 }
 
 function draw() {
-  background(50, 80);
-  strokeWeight(2);
-  stroke(255, 165, 0);
-  line(300, 30, 300, 400);
-
-  stroke(173, 216, 230);
-
-  textSize(14);
-  fill(255);
-  textAlign(CENTER);
-  text("Time left  : " + timeLeft, width / 2, 20);
-  stroke(255, 165, 0);
-
-  showBall();
-  moveBall();
-  checkEdgeCollision();
-  showRacket(xRacket, yRacket);
-  moveRacket1();
-  showRacket(xOpponentRacket, yOpponentRacket);
-  moveOpponentRacket();
+  background(50, 150);
  
-  checksRacketCollision(xRacket, yRacket, racketLength, racketHeight);
-  checksRacketCollision(xOpponentRacket,yOpponentRacket,racketLength,racketHeight);
+  if (start && !timerStarted) { // Checks if the game has started and if the timer has not started yet
+    startTimer(); // Starts the timer only once
+    timerStarted = true; // Defines that the timer has started
+  }
 
-  scoreboard();
-  deeppointCount();
+  if (start && timeLeft > 0) { // Checks if the game has started and if there is still time remaining
+    showBall();
+    moveBall();
+    checkEdgeCollision();
+    showRacket(xRacket, yRacket);
+    moveRacket1();
+    showRacket(xOpponentRacket, yOpponentRacket);
+    moveOpponentRacket();
+    checksRacketCollision(xRacket, yRacket, racketLength, racketHeight);
+    checksRacketCollision(xOpponentRacket, yOpponentRacket, racketLength, racketHeight);
+    scoreboard();
+    deeppointCount();
+  } else if (!start) { 
+    textAlign(CENTER, CENTER);
+    fill(255);
+    textSize(20);
 
+    text("use w/s/up/down to start the game.", width / 2, height / 2);
+  } else { 
+    gameOver();
+  }
+}
 
-
-
-
+function keyPressed() {
+  if (!start) {
+    start = true;
+  }
 }
 
 function startTimer() {
-  setTimeout(() => {
-    timeLeft--; // Reduces remaining time by 1 second
+  setInterval(() => { // Usamos setInterval para chamar a função a cada segundo
     if (timeLeft > 0) {
-      startTimer(); // Call the function again after 1 second
-    } else {
-      gameOver(); //Calls the function to end the game when time runs out
+      timeLeft--; 
     }
-  }, 1000); // 1000 milliseconds = 1 second
+  }, 1000); // Intervalo de 1 segundo
 }
 
 function showBall() {
@@ -123,31 +125,30 @@ function checkEdgeCollision() {
 
 function showRacket(x, y) {
   rect(x, y, racketLength, racketHeight);
-
 }
 
 function moveRacket1() {
-  if (keyIsDown(UP_ARROW)) {
-    // write the same js documentation
+  if (keyIsDown(87)) {
     yRacket -= 10;
   }
-
-  if (keyIsDown(DOWN_ARROW)) {
-    // write the same js documentation
+  if (keyIsDown(83)) {
     yRacket += 10;
   }
 }
 
-  function checksRacketCollision() {
+function checksRacketCollision(x, y, width, height) {
   if (
-    xBall - ray < xRacket + racketLength &&
-    yBall - ray < yRacket + racketHeight &&
-    yBall + ray > yRacket
+    xBall - ray < x + width &&
+    xBall + ray > x &&
+    yBall - ray < y + height &&
+    yBall + ray > y
   ) {
     xSpeedxBall *= -1;
     racketSound.play();
   }
 }
+
+
 
 function checksRacketCollision(x,y) {
   collision = collideRectCircle(x, y, racketLength, racketHeight,xBall,yBall,ray);
@@ -159,33 +160,17 @@ function checksRacketCollision(x,y) {
 
 
 
+
+
+
 function moveOpponentRacket() {
-  if (keyIsDown(87)) {
-    // write the same js documentation
+  if (keyIsDown(UP_ARROW)) {
     yOpponentRacket -= 10;
   }
-
-  if (keyIsDown(83)) {
-    // write the same js documentation
+  if (keyIsDown(DOWN_ARROW)) {
     yOpponentRacket += 10;
   }
 }
-
-
-function verificaColisaoBorda(){
-  if (xBall + ray> width 
-     (xBall - ray< 0)){
-    xSpeedxBall *= -1;
-  }
-  if (yBall + ray> height 
-     (yBall - ray < 0)){
-      ySpeedxBall *= -1;
-  }
-}
-
-
-
-
 
 function scoreboard() {
   stroke(255);
@@ -199,6 +184,16 @@ function scoreboard() {
   rect(360, 10, 40, 20);
   fill(255);
   text(opponentScore, 380, 20);
+
+  strokeWeight(2);
+  stroke(255, 165, 0);
+  line(300, 30, 300, 400);
+  stroke(173, 216, 230);
+  textSize(14);
+  textAlign(CENTER);
+  fill(color(255, 140, 0));
+  text("Time left: " + timeLeft, width / 2, 20);
+  stroke(255, 165, 0);
 }
 
 function deeppointCount() {
@@ -213,10 +208,17 @@ function deeppointCount() {
 }
 
 function gameOver() {
+  cheer.play();
+
+  noLoop();
   swal({
-    title: "Game over!",
-    text: "Time Sold out",
+    title: "Game Over! Time Sold out",
+    text: ("Final Score    " + score + " x " + opponentScore),
     icon: "success",
     button: "Reload to play again! :)",
+
+  }).then(() => {
+    location.reload();
+
   });
 }
