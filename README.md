@@ -21,7 +21,7 @@ Jogo desenvolvido durante o cusro de logica de programação com JavaScript da A
 <br>
 
 <p align="center">
-  <img alt="" src=".github/pong.gif" width="100%">
+  <img alt="" src="/.github/pong.gif" width="100%">
 </p>
 
 
